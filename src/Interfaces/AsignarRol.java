@@ -3,11 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Interfaces;
+import Proyecto_Restaurante.Conexion;
+import java.sql.*;
+import javax.swing.JOptionPane;
+import Proyecto_Restaurante.*;
 
-/**
- *
- * @author victo
- */
 public class AsignarRol extends javax.swing.JFrame {
 
     /**
@@ -30,6 +30,7 @@ public class AsignarRol extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -54,21 +55,30 @@ public class AsignarRol extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Seleccione un rol...");
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel1)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Adobe Express - file.jpg"))); // NOI18N
@@ -123,7 +133,33 @@ public class AsignarRol extends javax.swing.JFrame {
         rp.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jLabel3MouseClicked
+    public void cargarRolesEnComboBox() {
+        Connection conexion = Conexion.conectar();
+        if (conexion == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
+            return;
+        }
 
+        try {
+            String sql = "SELECT id_rol, nombre FROM roles";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String idRol = rs.getString("id_rol");
+                String nombre = rs.getString("nombre");
+
+                Roles rol = new Roles(idRol, nombre);
+                jComboBox1.addItem(rol); //Se le puede asignar un objeto como texto para el combobox ya que se asigno a la combobox que guardara objetos tipo roles
+            }
+
+            rs.close();
+            ps.close();
+            conexion.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los roles: " + e.getMessage());
+    }
+}
     /**
      * @param args the command line arguments
      */
@@ -160,6 +196,7 @@ public class AsignarRol extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<Roles> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
