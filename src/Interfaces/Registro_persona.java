@@ -6,6 +6,7 @@ package Interfaces;
 import Proyecto_Restaurante.Conexion;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import Proyecto_Restaurante.Personas;
 /**
  *
  * @author victo
@@ -49,10 +50,12 @@ public class Registro_persona extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(609, 615));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(187, 168, 147));
-        jPanel1.setPreferredSize(new java.awt.Dimension(790, 596));
+        jPanel1.setPreferredSize(new java.awt.Dimension(603, 593));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/le-palace-marrakech-4Ge59fadsA4-unsplash (1).jpg"))); // NOI18N
         jLabel1.setText("jLabel1");
@@ -281,8 +284,8 @@ public class Registro_persona extends javax.swing.JFrame {
                                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addGap(53, 53, 53)))
@@ -300,7 +303,7 @@ public class Registro_persona extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
@@ -311,14 +314,14 @@ public class Registro_persona extends javax.swing.JFrame {
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 610, 600);
+        jPanel1.setBounds(0, 0, 600, 593);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -340,33 +343,33 @@ public class Registro_persona extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2KeyPressed
 
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
-       String nombre = jTextField2.getText();
+        String nombre = jTextField2.getText();
         String fecha = jTextField3.getText();
         String correo = jTextField4.getText();
-        String num = jTextField1.getText().trim();
+        String num = jTextField1.getText();
 
-        // Comprobamos si los campos están vacíos
         if (nombre.isEmpty() || fecha.isEmpty() || correo.isEmpty() || num.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos.");
-            return; // Evita continuar si hay campos vacíos
-        }
-        //Verificar que no hayan espacios:
-        if (!num.matches("\\d+")) {
-            JOptionPane.showMessageDialog(null, "El número telefónico solo debe contener dígitos.");
             return;
         }
-        try {
-            // Llamamos al método insertarPersona, pasando los valores del formulario
-            insertarPersona(nombre, correo, fecha, num);  // Pasamos num como String
-        } catch (Exception e) {
-            // Si ocurre un error en insertarPersona, mostramos un mensaje 
-            JOptionPane.showMessageDialog(null, "Error al insertar persona: " + e.getMessage());
-            e.printStackTrace();  //detalles del error 
-        }
-       
-    }//GEN-LAST:event_jLabel9MouseClicked
 
-    public void insertarPersona(String nombre, String correo, String fechaNacimiento, String numeroTelefonico) {
+        if (!num.matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "El número telefónico debe ser numérico.");
+            return;
+        }
+
+        // Aqui se está creando y llenando el objeto Persona
+        Personas persona = new Personas();
+        persona.setNombre(nombre);
+        persona.setCorreo(correo);
+        persona.setFechaNacimiento(fecha);
+        persona.setNumeroTelefonico(num);
+
+        // Llamamos al método que lo inserta
+        insertarPersona(persona);
+    }//GEN-LAST:event_jLabel9MouseClicked
+    
+    public void insertarPersona(Personas persona) {
     Connection conexion = Conexion.conectar();
     if (conexion == null) {
         JOptionPane.showMessageDialog(null, "Error en la conexión a la base de datos");
@@ -374,31 +377,31 @@ public class Registro_persona extends javax.swing.JFrame {
     }
 
     try {
-        // Consultar el último ID de la tabla para saber cuál es el siguiente
-        String sqlUltimoId = "SELECT MAX(id_personas) FROM personas"; 
+        // Consultar el último ID
+        String sqlUltimoId = "SELECT MAX(id_personas) FROM personas";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(sqlUltimoId);
 
-        String nuevoId = "0001"; // Valor inicial si no hay registros
+        String nuevoId = "0001"; // Valor inicial para el ID
+
         if (rs.next()) {
-            String ultimoId = rs.getString(1); // Recupera el último ID
+            String ultimoId = rs.getString(1);
             if (ultimoId != null) {
-                // Elimina ceros a la izquierda antes de convertirlo en número
+                // Generar el nuevo ID a partir del último
                 int idNumerico = Integer.parseInt(ultimoId.trim());
-                nuevoId = String.format("%010d", idNumerico + 1); // Incrementa el ID y lo formatea a 10 caracteres
+                nuevoId = String.format("%04d", idNumerico + 1);
             }
         }
 
-        // Insertar el nuevo registro
+        // Insertar en la base de datos
         String sql = "INSERT INTO personas(id_personas, nombre, fecha_nacimiento, numero_telefonico, correo) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = conexion.prepareStatement(sql);
-        ps.setString(1, nuevoId); // Usamos setString para el ID de tipo varchar
-        ps.setString(2, nombre);
-        ps.setString(3, fechaNacimiento);
-        ps.setString(4, numeroTelefonico);
-        ps.setString(5, correo);
+        ps.setString(1, nuevoId);
+        ps.setString(2, persona.getNombre());
+        ps.setString(3, persona.getFechaNacimiento());
+        ps.setString(4, persona.getNumeroTelefonico());
+        ps.setString(5, persona.getCorreo());
 
-        // Ejecutar el insert
         int filasAfectadas = ps.executeUpdate();
         if (filasAfectadas > 0) {
             JOptionPane.showMessageDialog(null, "Persona insertada correctamente.");
@@ -406,15 +409,16 @@ public class Registro_persona extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No se pudo insertar la persona.");
         }
 
+        // Cerrar recursos
         ps.close();
         st.close();
         conexion.close();
 
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(null, "Error al insertar persona: " + e.getMessage());
-        e.printStackTrace();
     }
 }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
