@@ -4,6 +4,8 @@
  */
 package Proyecto_Restaurante;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author victo
@@ -12,11 +14,16 @@ public class Ventas {
     private String id_venta;
     private String fecha_hora;
     private String id_mesa;
+    private ArrayList<Detalle_venta> detalles;
 
     public Ventas(String id_venta, String fecha_hora, String id_mesa) {
         this.id_venta = id_venta;
         this.fecha_hora = fecha_hora;
         this.id_mesa = id_mesa;
+        this.detalles = new ArrayList<>();
+    }
+    public void agregarDetalle(Detalle_venta detalle) {
+        detalles.add(detalle);
     }
 
     public String getId_venta() {
@@ -41,6 +48,14 @@ public class Ventas {
 
     public void setId_mesa(String id_mesa) {
         this.id_mesa = id_mesa;
+    }
+
+    public ArrayList<Detalle_venta> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(ArrayList<Detalle_venta> detalles) {
+        this.detalles = detalles;
     }
     
 }

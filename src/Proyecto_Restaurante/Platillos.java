@@ -49,6 +49,7 @@ public class Platillos {
         this.id_categoria = id_categoria;
     }
     
+    @Override
     public String toString() {
         return nombre; // Lo que se verá en el JComboBox
     } 

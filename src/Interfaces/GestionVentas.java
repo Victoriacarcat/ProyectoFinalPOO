@@ -7,13 +7,17 @@ import Proyecto_Restaurante.Conexion;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import Proyecto_Restaurante.*;
+import java.util.ArrayList;
+import java.util.List;
 public class GestionVentas extends javax.swing.JFrame {
 
-    /**
-     * Creates new form GestionVentas
-     */
+    private List<Detalle_venta> listaDetalleVenta = new ArrayList<>();//Para hacer el carrito
+    private String idVentaActual=null;//Para mantener el mismo id de venta mientras se siguen agregando platillos al producto
     public GestionVentas() {
+        
         initComponents();
+        cargarPlatillosEnComboBox(); 
+        cargarMesasEnComboBox();
     }
 
     /**
@@ -29,20 +33,30 @@ public class GestionVentas extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(579, 472));
-        setMinimumSize(new java.awt.Dimension(579, 472));
-        setPreferredSize(new java.awt.Dimension(579, 472));
+        setMaximumSize(new java.awt.Dimension(744, 642));
+        setMinimumSize(new java.awt.Dimension(744, 642));
+        setPreferredSize(new java.awt.Dimension(744, 642));
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(167, 137, 118));
         jPanel1.setForeground(new java.awt.Color(167, 137, 118));
-        jPanel1.setPreferredSize(new java.awt.Dimension(726, 386));
+        jPanel1.setPreferredSize(new java.awt.Dimension(744, 642));
 
         jPanel2.setBackground(new java.awt.Color(139, 106, 87));
 
@@ -58,13 +72,14 @@ public class GestionVentas extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Rockwell", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Volver");
-        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabel5.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel5.setFont(new java.awt.Font("Rockwell", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Agregar a la venta");
+        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel7MouseClicked(evt);
+                jLabel5MouseClicked(evt);
             }
         });
 
@@ -74,15 +89,15 @@ public class GestionVentas extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel7)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(jLabel5)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addContainerGap())
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(167, 137, 118));
@@ -92,6 +107,12 @@ public class GestionVentas extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Seleccione el platillo de la venta:");
+
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -117,58 +138,183 @@ public class GestionVentas extends javax.swing.JFrame {
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
+        jPanel4.setBackground(new java.awt.Color(167, 137, 118));
+        jPanel4.setForeground(new java.awt.Color(167, 137, 118));
+
+        jLabel4.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel4.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Digite la cantidad de unidades:");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel4))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+
+        jPanel7.setBackground(new java.awt.Color(68, 47, 20));
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel7MouseClicked(evt);
+            }
+        });
+
+        jLabel6.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel6.setFont(new java.awt.Font("Rockwell", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Finalizar venta");
+        jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addGap(25, 25, 25))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        jPanel5.setBackground(new java.awt.Color(167, 137, 118));
+        jPanel5.setForeground(new java.awt.Color(167, 137, 118));
+
+        jLabel8.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel8.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Seleccione el número de la mesa");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(61, 61, 61))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46))))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(37, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(140, 140, 140))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(33, 33, 33))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(113, 113, 113))))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(101, 101, 101)
+                .addGap(99, 99, 99)
                 .addComponent(jLabel2)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel2)
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pexels-husna-simsek-1189396030-24838570 (2).jpg"))); // NOI18N
         jLabel1.setText("jLabel1");
+
+        jLabel7.setFont(new java.awt.Font("Rockwell", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Volver");
+        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addGap(25, 25, 25)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel7))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addGap(9, 9, 9)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -176,14 +322,12 @@ public class GestionVentas extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -196,17 +340,107 @@ public class GestionVentas extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
-        Inicio i = new Inicio();
-        i.setVisible(true);
-        this.setVisible(false);
+
     }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+
+    }//GEN-LAST:event_jPanel7MouseClicked
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+         try {
+            int cantidad = Integer.parseInt(jTextField1.getText());
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor que cero.");
+                return;
+            }
+            // Validar que idVentaActual esté asignado 
+            if (idVentaActual == null) {
+                idVentaActual = generarNuevoIdVenta(); // método para generar nuevo ID de venta
+            }
+            String nombrePlatillo = jComboBox1.getSelectedItem().toString();
+            // Obtener el idPlatillo usando un método que busque en BD o en lista
+            String idPlatillo = obtenerIdPlatilloPorNombre(nombrePlatillo);
+            // Generar un nuevo ID único para detalle_venta (puedes hacer un método parecido)
+            String idDetalleVenta = generarNuevoIdDetalleVenta();
+            // Crear el detalle con todos los IDs
+            Detalle_venta detalle = new Detalle_venta(idDetalleVenta,cantidad, idPlatillo,idVentaActual);
+
+            // Agregar detalle a la lista 
+            listaDetalleVenta.add(detalle);
+
+            JOptionPane.showMessageDialog(this, "Platillo agregado al carrito.");
+            jTextField1.setText("");
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor ingresa un número válido para la cantidad.");
+        }
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        finalizarVenta();
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    
+    //Generar los ids
+   public String generarNuevoIdDetalleVenta() {
+        String nuevoId = "0001";
+        try (Connection conexion = Conexion.conectar();
+             Statement st = conexion.createStatement();
+             ResultSet rs = st.executeQuery("SELECT MAX(CAST(id_detalle AS UNSIGNED)) FROM detalle_venta")) {
+            if (rs.next()) {
+                String ultimoId = rs.getString(1);
+                if (ultimoId != null && !ultimoId.trim().isEmpty()) {
+                    ultimoId = ultimoId.replaceAll("[^0-9]", ""); // Limpiar caracteres no numéricos y remplazamos por vacio
+                    try {
+                        int idNum = Integer.parseInt(ultimoId);
+                        nuevoId = String.format("%04d", idNum + 1);//Aumentar los ids y convertir a string
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Error al convertir a número: '" + ultimoId + "'");
+                        ex.printStackTrace();
+                    }
+                }
+            } else {
+                System.out.println("ResultSet vacío.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al generar ID de detalle venta: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return nuevoId;
+    }
+    public String generarNuevoIdVenta() {
+        String nuevoId = "0001";
+        try (Connection conexion = Conexion.conectar();
+             Statement st = conexion.createStatement();
+             ResultSet rs = st.executeQuery("SELECT MAX(CAST(id_venta AS UNSIGNED)) FROM venta")) {//consulta
+            if (rs.next()) {
+                String ultimoId = rs.getString(1);
+                if (ultimoId != null && !ultimoId.trim().isEmpty()) {
+                    int idNum = Integer.parseInt(ultimoId.trim());
+                    nuevoId = String.format("%04d", idNum + 1);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al generar ID de venta: " + e.getMessage());
+        }
+        return nuevoId;
+    }
+
     public void cargarPlatillosEnComboBox() {
         Connection conexion = Conexion.conectar();
         if (conexion == null) {
             JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.");
             return;
+        }else{
+            System.out.println("Conexion exitosa");
         }
-
         try {
             String sql = "SELECT id_platillo, nombre, precio, id_categoria FROM platillos";
             PreparedStatement ps = conexion.prepareStatement(sql);
@@ -219,16 +453,110 @@ public class GestionVentas extends javax.swing.JFrame {
                 String categoria = rs.getString("id_categoria");
                 Platillos platillo = new Platillos(idPlatillo, nombre, precio,categoria);
                 jComboBox1.addItem(platillo); 
-                System.out.println("Cargando: " + nombre);
             }
-
             rs.close();
             ps.close();
             conexion.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar los roles: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al cargar los platillos: " + e.getMessage());
+        }
     }
-}
+    public void cargarMesasEnComboBox() {
+        try (Connection conexion = Conexion.conectar();//Validamos conexión con la base
+             Statement st = conexion.createStatement();
+             ResultSet rs = st.executeQuery("SELECT id_mesa, capacidad, id_status FROM mesa")) {//consulta
+            while (rs.next()) {//Se recorre los resultados de la consulta
+                String id = rs.getString("id_mesa");
+                int capacidad = rs.getInt("capacidad");
+                String status = rs.getString("id_status");
+                Mesa mesas = new Mesa(id, capacidad, status);//Se instancia la clase Mesa para agregar un objeto a la lista
+                jComboBox2.addItem(mesas);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar mesas: " + e.getMessage());
+        }
+    }
+    public String obtenerIdPlatilloPorNombre(String nombrePlatillo) {
+        String idPlatillo = null;
+        String sql = "SELECT id_platillo FROM platillos WHERE nombre = ?";
+        try (Connection conexion = Conexion.conectar();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombrePlatillo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    idPlatillo = rs.getString("id_platillo");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se encontró el platillo: " + nombrePlatillo);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al obtener ID del platillo: " + e.getMessage());
+        }
+        return idPlatillo;
+    }
+    private void finalizarVenta() {
+        if (listaDetalleVenta.isEmpty()) {//Validamos que haya al menos un plato dentro de la venta
+            JOptionPane.showMessageDialog(this, "El carrito está vacío. Agrega platillos antes de finalizar.");
+            return;
+        }
+        if (idVentaActual == null || idVentaActual.trim().isEmpty()) {//Validamos que se inicie la venta con in id válido
+            JOptionPane.showMessageDialog(this, "No se ha iniciado la venta correctamente.");
+            return;
+        }
+        Mesa mesaSeleccionada = (Mesa) jComboBox2.getSelectedItem();//capturamos la mesa seleccionada
+        if (mesaSeleccionada == null) {//validamos que se haya seleccionado una mesa
+            JOptionPane.showMessageDialog(this, "Debes seleccionar una mesa válida.");
+            return;
+        }
+        String idMesa = mesaSeleccionada.getId_mesa();//Se toma el id de la mesa seleccionada
+        try (Connection conexion = Conexion.conectar()) {
+            conexion.setAutoCommit(false); 
+            // Aqui se Inserta en tabla venta
+            String sqlVenta = "INSERT INTO venta (id_venta, id_mesa, fecha_hora) VALUES (?, ?, CURRENT_TIMESTAMP)";
+            try (PreparedStatement psVenta = conexion.prepareStatement(sqlVenta)) {
+                psVenta.setString(1, idVentaActual);
+                psVenta.setString(2, idMesa);
+                psVenta.executeUpdate();
+            }
+            // Obtenemos último id_detalle porque cada adición al carrito requiere de un nuevo id pero con el mismo id de venta 
+            int ultimoIdDetalle = 0;//para lo anterior se utiliza un contador
+            try (Statement st = conexion.createStatement();//Se intenta obtener el último numero de id de la tabla detalle_venta
+                 ResultSet rs = st.executeQuery("SELECT MAX(CAST(id_detalle AS UNSIGNED)) FROM detalle_venta")) {
+                if (rs.next()) {
+                    String ultimo = rs.getString(1);
+                    if (ultimo != null) {
+                        ultimoIdDetalle = Integer.parseInt(ultimo);
+                    }
+                }
+            }
+            // Insertar detalles venta en la tabla detalle_venta
+            String sqlDetalle = "INSERT INTO detalle_venta (id_detalle, id_venta, id_platillo, cantidad) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement psDetalle = conexion.prepareStatement(sqlDetalle)) {
+                for (Detalle_venta detalle : listaDetalleVenta) {// se utiliza un for each para recorrer los platillos en el carrito
+                    ultimoIdDetalle++;//se aumenta el id de detalle venta
+                    String nuevoIdDetalle = String.format("%04d", ultimoIdDetalle);
+                    psDetalle.setString(1, nuevoIdDetalle);
+                    psDetalle.setString(2, idVentaActual);
+                    psDetalle.setString(3, detalle.getId_platillo());
+                    psDetalle.setInt(4, detalle.getCantidad());
+                    psDetalle.executeUpdate();
+                }
+            }
+            conexion.commit();
+            JOptionPane.showMessageDialog(this, "Venta registrada correctamente.");
+            // Limpiar lista y campos para próxima venta
+            listaDetalleVenta.clear();
+            jTextField1.setText("");
+            jComboBox1.setSelectedIndex(0);
+            idVentaActual = null;
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al registrar la venta: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * @param args the command line arguments
      */
@@ -266,13 +594,22 @@ public class GestionVentas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Platillos> jComboBox1;
+    private javax.swing.JComboBox<Mesa> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

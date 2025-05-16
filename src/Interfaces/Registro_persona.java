@@ -352,12 +352,10 @@ public class Registro_persona extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos.");
             return;
         }
-
         if (!num.matches("\\d+")) {
             JOptionPane.showMessageDialog(null, "El número telefónico debe ser numérico.");
             return;
         }
-
         // Aqui se está creando y llenando el objeto Persona
         Personas persona = new Personas();
         persona.setNombre(nombre);
@@ -365,58 +363,56 @@ public class Registro_persona extends javax.swing.JFrame {
         persona.setFechaNacimiento(fecha);
         persona.setNumeroTelefonico(num);
 
-        // Llamamos al método que lo inserta
         insertarPersona(persona);
     }//GEN-LAST:event_jLabel9MouseClicked
     
     public void insertarPersona(Personas persona) {
-    Connection conexion = Conexion.conectar();
-    if (conexion == null) {
-        JOptionPane.showMessageDialog(null, "Error en la conexión a la base de datos");
-        return;
-    }
+        Connection conexion = Conexion.conectar();
+        if (conexion == null) {
+            JOptionPane.showMessageDialog(null, "Error en la conexión a la base de datos");
+            return;
+        }
+        try {
+            // Consultar el último ID
+            String sqlUltimoId = "SELECT MAX(id_personas) FROM personas";
+            Statement st = conexion.createStatement();
+            ResultSet rs = st.executeQuery(sqlUltimoId);
 
-    try {
-        // Consultar el último ID
-        String sqlUltimoId = "SELECT MAX(id_personas) FROM personas";
-        Statement st = conexion.createStatement();
-        ResultSet rs = st.executeQuery(sqlUltimoId);
+            String nuevoId = "0001"; // Valor inicial para el ID
 
-        String nuevoId = "0001"; // Valor inicial para el ID
-
-        if (rs.next()) {
-            String ultimoId = rs.getString(1);
-            if (ultimoId != null) {
-                // Generar el nuevo ID a partir del último
-                int idNumerico = Integer.parseInt(ultimoId.trim());
-                nuevoId = String.format("%04d", idNumerico + 1);
+            if (rs.next()) {
+                String ultimoId = rs.getString(1);
+                if (ultimoId != null) {
+                    // Generar el nuevo ID a partir del último
+                    int idNumerico = Integer.parseInt(ultimoId.trim());
+                    nuevoId = String.format("%04d", idNumerico + 1);
+                }
             }
+
+            // Insertar en la base de datos
+            String sql = "INSERT INTO personas(id_personas, nombre, fecha_nacimiento, numero_telefonico, correo) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setString(1, nuevoId);
+            ps.setString(2, persona.getNombre());
+            ps.setString(3, persona.getFechaNacimiento());
+            ps.setString(4, persona.getNumeroTelefonico());
+            ps.setString(5, persona.getCorreo());
+
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(null, "Persona insertada correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo insertar la persona.");
+            }
+
+            // Cerrar recursos
+            ps.close();
+            st.close();
+            conexion.close();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al insertar persona: " + e.getMessage());
         }
-
-        // Insertar en la base de datos
-        String sql = "INSERT INTO personas(id_personas, nombre, fecha_nacimiento, numero_telefonico, correo) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement ps = conexion.prepareStatement(sql);
-        ps.setString(1, nuevoId);
-        ps.setString(2, persona.getNombre());
-        ps.setString(3, persona.getFechaNacimiento());
-        ps.setString(4, persona.getNumeroTelefonico());
-        ps.setString(5, persona.getCorreo());
-
-        int filasAfectadas = ps.executeUpdate();
-        if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(null, "Persona insertada correctamente.");
-        } else {
-            JOptionPane.showMessageDialog(null, "No se pudo insertar la persona.");
-        }
-
-        // Cerrar recursos
-        ps.close();
-        st.close();
-        conexion.close();
-
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al insertar persona: " + e.getMessage());
-    }
 }
 
     public static void main(String args[]) {
