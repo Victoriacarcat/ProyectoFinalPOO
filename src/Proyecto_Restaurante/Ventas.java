@@ -6,10 +6,6 @@ package Proyecto_Restaurante;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author victo
- */
 public class Ventas {
     private String id_venta;
     private String fecha_hora;

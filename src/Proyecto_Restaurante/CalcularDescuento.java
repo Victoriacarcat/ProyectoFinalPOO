@@ -8,6 +8,12 @@ package Proyecto_Restaurante;
  *
  * @author victo
  */
-public class Factura_venta {
-    
+public class CalcularDescuento extends Calcular {//Herencia
+    @Override
+    public double calcularValor(double subtotal) {
+        if (subtotal > 50000) {
+            return subtotal * 0.10; // 10% de descuento
+        }
+        return 0;
+    }
 }

@@ -8,6 +8,9 @@ package Proyecto_Restaurante;
  *
  * @author victo
  */
-public class Estados {
-    
+public class CalcularIVA extends Calcular {//Herencia
+    @Override
+    public double calcularValor(double subtotal) {
+        return subtotal * 0.19; // 19% 
+    }
 }

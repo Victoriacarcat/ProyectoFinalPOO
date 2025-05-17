@@ -49,6 +49,10 @@ public class Platillos {
         this.id_categoria = id_categoria;
     }
     
+    public double calcularPrecio() {
+        return precio;
+    }
+    
     @Override
     public String toString() {
         return nombre; // Lo que se verá en el JComboBox

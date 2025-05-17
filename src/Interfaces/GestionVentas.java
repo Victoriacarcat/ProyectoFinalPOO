@@ -13,6 +13,7 @@ public class GestionVentas extends javax.swing.JFrame {
 
     private List<Detalle_venta> listaDetalleVenta = new ArrayList<>();//Para hacer el carrito
     private String idVentaActual=null;//Para mantener el mismo id de venta mientras se siguen agregando platillos al producto
+    private List<Platillos> listaPlatillos = new ArrayList<>();//Lista para almacenar los platillos agregados a la venta actual, esto para los datos en la factura
     public GestionVentas() {
         
         initComponents();
@@ -369,6 +370,8 @@ public class GestionVentas extends javax.swing.JFrame {
             String idDetalleVenta = generarNuevoIdDetalleVenta();
             // Crear el detalle con todos los IDs
             Detalle_venta detalle = new Detalle_venta(idDetalleVenta,cantidad, idPlatillo,idVentaActual);
+            Platillos platilloSeleccionado = (Platillos) jComboBox1.getSelectedItem();
+            listaPlatillos.add(platilloSeleccionado);
 
             // Agregar detalle a la lista 
             listaDetalleVenta.add(detalle);
@@ -529,6 +532,7 @@ public class GestionVentas extends javax.swing.JFrame {
                     }
                 }
             }
+            double totalDescuento = 0;
             // Insertar detalles venta en la tabla detalle_venta
             String sqlDetalle = "INSERT INTO detalle_venta (id_detalle, id_venta, id_platillo, cantidad) VALUES (?, ?, ?, ?)";
             try (PreparedStatement psDetalle = conexion.prepareStatement(sqlDetalle)) {
@@ -540,10 +544,14 @@ public class GestionVentas extends javax.swing.JFrame {
                     psDetalle.setString(3, detalle.getId_platillo());
                     psDetalle.setInt(4, detalle.getCantidad());
                     psDetalle.executeUpdate();
+                    
                 }
             }
             conexion.commit();
             JOptionPane.showMessageDialog(this, "Venta registrada correctamente.");
+            Factura factura = new Factura(listaDetalleVenta, listaPlatillos); // Se le pasa a Factura ambas listas para obtener los datos necesarios
+            VistaFactura vf = new VistaFactura(factura);
+            vf.setVisible(true);//Para mostrar la factura
             // Limpiar lista y campos para próxima venta
             listaDetalleVenta.clear();
             jTextField1.setText("");
