@@ -227,9 +227,9 @@ public class Gestion_persona extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        Gestion_persona gp=new Gestion_persona();
-        gp.setVisible(true);
-        this.setVisible(false);
+        Inicio i = new Inicio();
+         i.setVisible(true);
+         this.setVisible(false);
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
